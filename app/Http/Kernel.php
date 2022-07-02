@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'freelancer_check' => \App\Http\Middleware\FreelancerMiddleware::class,
         'userauth' => \App\Http\Middleware\AuthMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

@@ -213,68 +213,6 @@
 		                </a>
 		            </div>
 		        </div>
-		        <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
-		            <div>
-		                <h6 class="text-lg font-medium text-cyan-900">Company</h6>
-		                <ul class="list-inside mt-4 space-y-4">
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">About</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Customers</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Enterprise</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Partners</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Jobs</a>
-		                    </li>
-		                </ul>
-		            </div>
-		            <div>
-		                <h6 class="text-lg font-medium text-cyan-900">Products</h6>
-		                <ul class="list-inside mt-4 space-y-4">
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">About</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Customers</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Enterprise</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Partners</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Jobs</a>
-		                    </li>
-		                </ul>
-		            </div>
-		            <div>
-		                <h6 class="text-lg font-medium text-cyan-900">Ressources</h6>
-		                <ul class="list-inside mt-4 space-y-4">
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">About</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Customers</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Enterprise</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Partners</a>
-		                    </li>
-		                    <li>
-		                        <a href="#" class="hover:text-cyan-600 transition">Jobs</a>
-		                    </li>
-		                </ul>
-		            </div>
-		        </div>
 		        <div class="flex justify-between px-4 py-3 rounded-md bg-gray-200 text-gray-600">
 		            <span>&copy; ProjectCamp <span id="year"></span></span>
 		            <a href="#" class="font-medium transition hover:text-cyan-600">Licence</a>

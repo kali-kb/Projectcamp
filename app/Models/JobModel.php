@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Proposal;
+use App\Models\SavedJobs;
 use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,12 +22,19 @@ class JobModel extends Model
 
     public function proposals(){
 
-        return $this->hasMany(Proposal::class, "job_id");
+        return $this->hasMany(Proposal::class, "job_id", "id");
     
     }
 
-    public function client(){
+    public function hires(){
+        return $this->hasOne(Hired::class, "id", "job_id");
+    }
 
+    public function saved_job(){
+        return $this->hasOne(SavedJobs::class, "id", "job_id");
+    }
+
+    public function client(){
         return $this->belongsTo(Client::class, "id");
     }
 

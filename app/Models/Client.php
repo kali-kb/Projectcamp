@@ -16,4 +16,7 @@ class Client extends Model
         return $this->hasMany(JobModel::class, "job_id");
     }
 
+    function hired(){
+        return $this->hasMany(Hired::class);
+    }
 }

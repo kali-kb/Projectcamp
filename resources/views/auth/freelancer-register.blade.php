@@ -9,7 +9,7 @@
 <body>
 	<!--freelancer data form-->
 	<h1 class="text-center text-3xl font-bold my-6">Fill out a little bit more information..</h1>
-    <div class="sm:w-1/2 w-11/12 mx-auto space-y-6">
+    <div class="sm:w-1/2 w-11/12 mx-auto my-6 space-y-6">
 	  <div>
       	<label for="careers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select Your Career</label>
         <select id="careers" name="career" form="f-form" class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

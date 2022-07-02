@@ -12,7 +12,12 @@ class Proposal extends Model
     protected $table = "proposal";
 
     function job(){
-        return $this->belongsTo(JobModel::class, "id");
+        return $this->belongsTo(JobModel::class);
     }
+
+    function freelancer(){
+        return $this->belongsTo(FreelancerModel::class, "freelancer_id", "freelancer_id");
+    }
+
 
 }

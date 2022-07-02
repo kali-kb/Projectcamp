@@ -9,7 +9,9 @@ class FreelancerModel extends Model
 {
     use HasFactory;
 
-
-
     protected $table = "freelancer";
+
+    public function proposals(){
+        return $this->hasMany(Proposal::class);
+    }
 }

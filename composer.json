@@ -14,7 +14,9 @@
         "laravel/scout": "^9.4",
         "laravel/telescope": "^4.9",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^2.10"
+        "livewire/livewire": "^2.10",
+        "symfony/http-client": "^6.1",
+        "symfony/mailgun-mailer": "^6.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

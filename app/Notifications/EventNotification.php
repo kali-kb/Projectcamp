@@ -16,9 +16,9 @@ class EventNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($notification_data)
     {
-        //
+        $this->notification_data = $notification_data;
     }
 
     /**
@@ -57,7 +57,7 @@ class EventNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            "message" => $this->notification_data["event"]
         ];
     }
 }

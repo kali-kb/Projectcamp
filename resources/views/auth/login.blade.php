@@ -21,6 +21,29 @@
 	                    </div>
 	                    <div class="p-6 sm:p-16">
 	                        <h2 class="mb-8 text-2xl text-black font-bold">Sign in to your account</h2>
+	                        {{-- error message --}}
+	                        @if(session()->has("email_error") || session()->has("password_error"))
+	                        	@if(session()->has("email_error"))
+		                        	<div class="w-full flex items-center px-3 border border-red-500 h-10 mx-auto my-2 rounded">
+									  <div class="flex items-center space-x-2">
+									    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+									      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+									    </svg>
+									    <span class="font-semibold text-red-500">{{ session()->get("email_error") }}</span>
+									  </div>
+									</div>
+								@elseif(session()->has("password_error"))
+									<div class="w-full flex items-center px-3 border border-red-500 h-10 mx-auto my-2 rounded">
+									  <div class="flex items-center space-x-2">
+									    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+									      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+									    </svg>
+									    <span class="font-semibold text-red-500">{{ session()->get("password_error") }}</span>
+									  </div>
+									</div>
+								@endif
+							@endif	
+	                        {{-- error message --}}
 	                        <form action="login/check" id="f" method="post" class="space-y-8">
 	                        	@csrf
 	                            <div class="space-y-2">
@@ -54,7 +77,7 @@
 	                            </button>
 	                            <button type="submit" id="btn-2"
 	                                    class="w-full py-3 px-6 rounded-md bg-black
-	                                        focus:bg-gray-900 bg-[#b1ff00]">
+	                                        focus:bg-green-500 focus:text-white bg-[#b1ff00]">
 	                                <span class="text-black font-bold">Sign in as Client</span>
 	                            </button>
 

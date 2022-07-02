@@ -4,8 +4,11 @@
 /storage/*.key
 /vendor
 .env
+demo.txt
+bug-note.txt
 .env.backup
 .phpunit.result.cache
+bug-note.txt
 Homestead.json
 Homestead.yaml
 npm-debug.log
