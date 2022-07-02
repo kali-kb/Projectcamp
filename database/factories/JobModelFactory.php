@@ -22,7 +22,7 @@ class JobModelFactory extends Factory
         return [
             "job_title" => $this->faker->jobTitle(),
             "job_description" => $this->faker->sentence(),
-            "id" => 1,
+            "id" => 5,
             "price" => $this->faker->numerify()
         ];
     }

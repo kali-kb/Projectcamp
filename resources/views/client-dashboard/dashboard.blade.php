@@ -10,7 +10,7 @@
 		    </div>
 		    <div class="flex max-w-fit flex-col rounded border py-6 px-12 sm:-translate-x-0 -translate-x-8">
 		      <h1 class="text-3xl">Jobs Posted</h1>
-		      <span class="text-6xl">{{ count($client->jobs) }}</span>
+		      <span class="text-6xl">{{ count(App\Models\JobModel::where("id",$client->id)->get()) }}</span>
 		    </div>
 		  </div>
 		</div>

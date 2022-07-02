@@ -17,15 +17,15 @@ class JobSeeder extends Seeder
      */
     public function run()
     {
-        DB::table("job")->insert([
-            "job_id" => 1,
-            "job_title" => "Blockchain Developer",
-            "job_description" => "I need a blockchain developer",
-            "id" => 1,
-            "is_open" => 1,
-            "price" => 500, 
+        // DB::table("job")->insert([
+        //     "job_id" => 1,
+        //     "job_title" => "Blockchain Developer",
+        //     "job_description" => "I need a blockchain developer",
+        //     "id" => 1,
+        //     "is_open" => 1,
+        //     "price" => 500, 
 
-        ]);
-        // JobModel::factory()->count(10)->create();
+        // ]);
+        JobModel::factory()->count(4)->create();
     }
 }

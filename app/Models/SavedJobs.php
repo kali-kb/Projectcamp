@@ -14,6 +14,6 @@ class SavedJobs extends Model
     protected $table = "saved_jobs";
 
     public function jobs(){
-        return $this->belongsTo(JobModel::class, "job_id", "id");
+        return $this->belongsTo(JobModel::class, "job_id", "job_id");
     }
 }

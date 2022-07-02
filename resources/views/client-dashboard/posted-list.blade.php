@@ -39,7 +39,7 @@
 		          <div class="flex -space-x-2">
 		          	@foreach($job->proposals as $proposal)
 			            <div class="h-4 w-4 ring-2 ring-[#b1ff00] overflow-hidden object-cover rounded-full">
-			              <img class="w-full h-full object-cover" src="{{ $proposal->freelancer->profile_image_url }}" alt="">
+			              <img class="w-full h-full object-cover" src="{{ $proposal->freelancer->profile_image_url }}" alt="proposer_image">
 			            </div>
 		            @endforeach
 		          </div>

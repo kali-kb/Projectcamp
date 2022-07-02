@@ -11,6 +11,7 @@ class Client extends Model
     use HasFactory, Notifiable;
 
     protected $table = "client";
+    public $timestamps = false;
 
     function jobs(){
         return $this->hasMany(JobModel::class, "job_id");
