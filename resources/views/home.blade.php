@@ -27,12 +27,12 @@
 		                    <div class="block w-full lg:items-center lg:flex">
 		                        <ul class="space-y-6 pb-6 tracking-wide font-medium text-gray-600 lg:pb-0 lg:pr-6 lg:items-center lg:flex lg:space-y-0">
 		                            <li>
-		                                <a href="#" class="block md:px-3">
+		                                <a href="/u/login/" class="block md:px-3">
 		<span>Hire a talent</span>
 		                                </a>
 		                            </li>
 		                            <li>
-		                                <a href="#" class="block md:px-3">
+		                                <a href="/u/login/" class="block md:px-3">
 		                                    <span>Find Job</span>
 		                                </a>
 		                            </li>
@@ -103,7 +103,7 @@
 		<div class="pb-8">
 		    <div class="container m-auto px-6 md:px-12 lg:px-6">
 		        <div class="py-8 px-12 bg-black rounded-2xl">
-		            <span class="block text-center font-medium text-[#b1ff00]">Trusted by your favorite giants</span>
+		            <span class="block text-center font-medium text-[#b1ff00]">Trusted by your  giants</span>
 		            <div class="mt-8 flex justify-center flex-wrap items-center gap-4 md:gap-6 lg:gap-8">
 		                <div class="flex items-center">
 		                    <img class="w-36" src="https://logo.clearbit.com/google.com" alt="client logo" loading="lazy" width="584" height="122">
