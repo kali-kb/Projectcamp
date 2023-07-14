@@ -42,23 +42,26 @@
 	<form action="/u/register/freelancer/add" enctype="multipart/form-data" method="post" id="f-form">
       @csrf
 	    <div>
-        
-        <label for="profile-image" class="block mb-2 text-sm font-medium text-gray-900">Upload your Profile Picture</label> <span>An image with aspect ratio 1:1/square image required
-        <input class="border rounded" type="file" name="profile-image">
-
-	      <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>
-	      <input type="text" id="large-input" name="name" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
-
-        <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
-        <input type="email" id="email" name="email" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
-
-        <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Password</label>
-        <input type="password" id="password" name="password" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
-	    
+        <div class="my-4">
+          <label for="profile-image" class="inline  text-sm font-medium text-gray-900">Upload your Profile Picture</label><span class="text-sm"> (An image with aspect ratio 1:1/square image required) </span>
+          <input class="border my-3 rounded block" type="file" name="profile-image">
+        </div>
+        <div class="my-4">
+  	      <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Name</label>
+  	      <input type="text" id="large-input" name="name" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="my-4">
+          <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Email</label>
+          <input type="email" id="email" name="email" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="my-4">
+          <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Password</label>
+          <input type="password" id="password" name="password" class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500">
+        </div>
       </div>
 
 	    <div>
-	      <label class="font-semibold" for="">Rate</label>
+	      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500" for="">Rate</label>
 	      <input min="0" name="rate" class="border px-3 py-3 block rounded" type="number">
 	    </div>
 	    <input class="bg-black mt-4 px-2 w-full font-semibold text-[#b1ff00] hover:bg-gray-900 py-3 rounded" value="Continue" type="submit">

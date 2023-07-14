@@ -45,19 +45,7 @@
 
     <script type="text/javascript">
       var selectElement = document.getElementById("projectSelect");
-
-      // Get the job_id from localStorage
       var jobID = localStorage.getItem("job_id");
-
-      // Set the default value based on the job_id
       selectElement.value = jobID;
-        // job = document.getElementById("job_id")
-        // window.addEventListener("load", insertId)
-
-        // function insertId(e){
-        //   var id = window.localStorage.getItem("job_id")
-        //   job.value = id 
-        //   // window.localStorage.clear()
-        // }
     </script>
   @endsection
