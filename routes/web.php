@@ -265,8 +265,7 @@ Route::prefix("fx")->group(function(){
         if(request()->hasFile("project-file")){
             // Mail::to("pjcamp81@gmail.com")
                 // ->send(new ProjectDone($file->getRealPath(), $subject));
-            $recipientEmail = "pjcamp81@gmail.com"; 
-            // $recipientEmail = $client->email; 
+            $recipientEmail = $client->email; 
             Mail::send('mail-template.mail', [], function($message) use ($file, $originalName, $recipientEmail) {
               $message->to($recipientEmail);
               $message->attach($file->getRealPath(), [
