@@ -15,15 +15,26 @@ class ProposalSeeder extends Seeder
      */
     public function run()
     {
-        DB::table("proposal")->insert([
+        DB::table("proposal")->insert(
+
+        [
             "id" => 1,
-            "job_id" => 1,
-            "bid" => 730,
+            "job_id" => 2,
+            "bid" => 54,
             "proposal_text" => "I'm happy to work with you if you allow me",
-            "created_time" => date("Y-m-d H:i:s"),
-            // "created_at" => date("Y-m-d H:i:s"),
-            // "updated_at" => date("Y-m-d H:i:s"),
+            "created_time" => now(),
             "freelancer_id" => 1,
-        ]);    
+        ],
+
+        [
+            "id" => 2,
+            "job_id" => 2,
+            "bid" => 50,
+            "proposal_text" => "I have a react experience",
+            "created_time" => now(),
+            "freelancer_id" => 2,
+        ],
+
+    );    
     }
 }

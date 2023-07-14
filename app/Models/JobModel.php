@@ -15,14 +15,37 @@ class JobModel extends Model
 
     public $timestamps = false;
     protected $table = "job";
+    protected $primaryKey = 'job_id';
 
     public function searchableAs(){
         return 'jobs_index';
     }
 
+
+    private function getCurrentlyLoggedinUser()
+    {
+        $currently_loggedin_user_email = session()->get("email");
+        $currently_logged_in_user_id = FreelancerModel::where("email", $currently_loggedin_user_email)->get()->first()->freelancer_id;
+        return $currently_logged_in_user_id;
+    }
+
+    public function hasFreelancerApplied()
+    {
+        // Check if the authenticated user has applied to this job
+        $id = $this->getCurrentlyLoggedinUser();
+        return $this->proposals()->where('freelancer_id', $id)->exists();
+    }
+    
+    public function isBookmarkedJob()
+    {
+        $id = $this->getCurrentlyLoggedinUser();
+        return $this->saved_job()->where("freelancer_id", $id)->exists();
+    }
+
+
     public function proposals(){
 
-        return $this->hasMany(Proposal::class, "job_id", "id");
+        return $this->hasMany(Proposal::class, "job_id", "job_id");
     
     }
 
@@ -31,7 +54,7 @@ class JobModel extends Model
     }
 
     public function saved_job(){
-        return $this->hasOne(SavedJobs::class, "id", "job_id");
+        return $this->hasOne(SavedJobs::class, "job_id", "job_id");
     }
 
     public function client(){

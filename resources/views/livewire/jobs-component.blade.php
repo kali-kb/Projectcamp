@@ -40,13 +40,13 @@
                     </svg>
                     <div class="flex flex-col">
                       <span class="font-semibold">{{ $job->job_title }}</span>
-                      <span class="text-xs opacity-50">{{ $job->job_description }}</span>
+                      <span class="text-xs opacity-50">{{ Str::limit($job->job_description, 70) }}</span>
                       <span>{{ $job->client->name }}</span>
                       <div class="inline">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#b1ff00] inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        <span class="font-bold text-sm">${{ $job->price }}</span>
+                        <span class="font-bold text-sm">${{ $job->price }}/hr</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#b1ff00] inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg> 
@@ -55,7 +55,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#b1ff00] inline" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                             </svg>
-                            <span class="font-bold text-sm">{{ count($job->proposals()->where("job_id", $job->job_id)->get()) }} Proposals</span>
+                            <span class="font-bold text-sm">{{ count($proposal->where("job_id", $job->job_id)) }} Proposals</span>
                             {{-- <span class="font-bold text-sm">{{ count($job->proposal) }} Proposals</span> --}}
                             @if($job->is_open)
                                 <span class="mx-3 font-bold text-sm text-[#b1ff00]">Open</span>
@@ -69,11 +69,11 @@
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline text-[#b1ff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span class="text-sm font-semibold">{{ Carbon\Carbon::parse($job->created_date)->diffForHumans() }}</span>
+                      <span class="text-sm font-semibold">{{ $this->formatRelativeTime($job->created_date) }}</span>
                     </div>
                   </div>
                   <div id="{{ $job->job_id }}" class="flex m-2 space-x-10">
-                    @if($saved && $saved_id == $job->job_id)
+                    @if($job->isBookmarkedJob())
                         <button id="save-btn" wire:click="save({{ $job->job_id }})" class="hover:bg-green-100 hover:duration-200 rounded">
                             <svg xmlns="http://www.w3.org/2000/svg" class="active:bg-green-300 h-6 text-[#b1ff00] w-6 fill-[#b1ff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -85,12 +85,24 @@
                               <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                             </svg>
                         </button>
-                    @endif    
-                    <button id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-[#b1ff00] hover:bg-grey-900">Apply</button>
+                    @endif
+                    @if($job->hasFreelancerApplied())
+                      <button id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-gray-500 hover:bg-grey-900">Applied</button>
+                    @else
+                      <button onClick="navigateToProposalFormPage({{$job->job_id}})" id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-[#b1ff00] hover:bg-grey-900">Apply</button>
+                    @endif
                   </div>
                 </div>
             @endforeach
-                
+            
+            <script>
+              function navigateToProposalFormPage(job_id) {
+                window.localStorage.job_id = job_id
+                window.location.href = "/fx/dashboard/apply"
+                console.log("The button was clicked");
+              }
+            </script>
+
         </div>
         <!--jobs-->
     </section>

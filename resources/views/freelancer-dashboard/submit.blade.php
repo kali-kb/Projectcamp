@@ -11,18 +11,29 @@
     </div>
     <form method="post" action="{{ route("submit") }}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" id="job_id" name="job_id">
+
+        {{-- <input type="hidden" id="job_id" name="job_id"> --}}
+
+
         <div class="sm:w-3/4 w-11/12 mx-auto my-3 space-y-6">
+            <div class="flex flex-col my-10">
+              <label>Select Project</label>
+              <select id="projectSelect" name="project" class="my-3 p-5 bg-transparent rounded border-2">
+                @foreach($freelancer->ongoingProjects() as $project)
+                  <option value="{{$project->job->job_id}}">{{ $project->job->job_title }}</option>
+                @endforeach  
+              </select>
+            </div>
           <span>Project file</span>
           <div class="flex w-full h-36 items-center justify-center bg-grey-lighter">
-          <label class="w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg tracking-wide uppercase border-2 border-[#b1ff00] border-dashed cursor-pointer hover:bg-blue">
+            <label for="project-file" class="w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg tracking-wide uppercase border-2 border-[#b1ff00] border-dashed cursor-pointer hover:bg-blue">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
               <span class="mt-2 text-base leading-normal">Select a file</span>
-              <input type='file' name="project-file" class="hidden" />
-          </label>
-        </div>
+              <input type='file' name="project-file" id="project-file" class="hidden" accept=".zip,.rar,.7z,.png,.jpg,.jpeg,.mp4,.m4v,.wav,.svg,.flv" />
+            </label>
+          </div>
         <div>
           <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Something you want to say about the project (optional)</label>
           <input type="text" id="large-input" name="description" class="block w-full p-8 text-gray-900 border border-gray-300 rounded-lg sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -33,13 +44,20 @@
     </form>
 
     <script type="text/javascript">
-        job = document.getElementById("job_id")
-        window.addEventListener("load", insertId)
+      var selectElement = document.getElementById("projectSelect");
 
-        function insertId(e){
-          var id = window.localStorage.getItem("job_id")
-          job.value = id 
-          window.localStorage.clear()
-        }
+      // Get the job_id from localStorage
+      var jobID = localStorage.getItem("job_id");
+
+      // Set the default value based on the job_id
+      selectElement.value = jobID;
+        // job = document.getElementById("job_id")
+        // window.addEventListener("load", insertId)
+
+        // function insertId(e){
+        //   var id = window.localStorage.getItem("job_id")
+        //   job.value = id 
+        //   // window.localStorage.clear()
+        // }
     </script>
   @endsection

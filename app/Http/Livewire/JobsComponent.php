@@ -7,6 +7,9 @@ use App\Models\JobModel;
 use App\Models\FreelancerModel;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Helpers\RelativeTimeFormatter;
+use App\Models\Proposal;
 
 class JobsComponent extends Component
 {
@@ -41,6 +44,17 @@ class JobsComponent extends Component
         $saved_email = session()->get("email");
         $freelancer = DB::table("freelancer")->where("email", $saved_email)->get()[0];
         $jobs =  JobModel::where("is_open", true)->orderBy("created_date", "asc")->get();
-        return view('livewire.jobs-component', ["query" => "", "freelancer" => $freelancer, "jobs" => $jobs]);
+        $proposals = Proposal::all();
+        foreach ($jobs as $job) {
+            $job->created_date = Carbon::parse($job->created_date)->diffForHumans();
+        }
+        error_log("job search: " . $jobs);
+        return view('livewire.jobs-component', ["query" => "", "freelancer" => $freelancer, "jobs" => $jobs, "proposal" => $proposals]);
     }
+
+    public function formatRelativeTime($date)
+    {
+        return RelativeTimeFormatter::format($date);
+    }
+
 }

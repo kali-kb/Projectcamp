@@ -34,7 +34,6 @@
 			var job_id = window.localStorage.getItem("job_id")
 			// console.log(job_idItem)
 			input.value = job_id
-			window.localStorage.clear()
 		}
 	</script>
 

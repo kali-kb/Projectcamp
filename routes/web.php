@@ -23,6 +23,7 @@ use Livewire\Event;
 use App\Mail\ProjectDone;
 
 Route::get('/', function () {
+    error_log("executed");
     return view("home");
 });
 
@@ -41,6 +42,7 @@ Route::get("/test", function(Request $request){
     //     echo "false";
     // }
 
+    error_log("executed");
     echo session()->get("account_type");
     // echo $client;
     // $freelancers = FreelancerModel::where("rate", 39)->get();
@@ -115,7 +117,6 @@ Route::post('u/register/freelancer/add', function(Request $request){
     }
 });
 
-/** Code Repetition !! squash them into a single form handler **/
 
 Route::post("/u/login/check", function(Request $request){
     $password = $request->input("pwd");
@@ -160,8 +161,8 @@ Route::post("u/register/client/add", function(Request $request){
 Route::prefix("fx")->group(function(){
     Route::get("/dashboard", function(){
         $saved_email = session()->get("email");
-        $freelancer = DB::table("freelancer")->where("email", $saved_email)->get()[0];
-        $ongoing = Hired::where("freelancer_id", $freelancer->freelancer_id)->get();
+        $freelancer = FreelancerModel::where("email", $saved_email)->get()->first();
+        $ongoing = Hired::where("freelancer_id", $freelancer->freelancer_id)->where("finished", false)->get();
         return view("freelancer-dashboard.main", ["freelancer" => $freelancer, "ongoing" => $ongoing]);
     })->name("freelancer-dashboard")->middleware("freelancer_check", "userauth");
 
@@ -196,7 +197,8 @@ Route::prefix("fx")->group(function(){
         $freelancer = DB::table("freelancer")->where("email", $saved_email)->get()[0];
         $query = $request->input("query");
         // $results = JobModel::search($query)->get();
-        $results = JobModel::query()->where("job_title", "LIKE", "%{$query}%")->get();
+        $results = JobModel::query()->where("job_title", "LIKE", "%{$query}%")->where("is_open", true)->with('client')->get();
+        error_log("results: " . $results);
         return view("freelancer-dashboard.search-results", [
             "freelancer" => $freelancer,
             "results" => $results,
@@ -211,7 +213,7 @@ Route::prefix("fx")->group(function(){
         $freelancer = DB::table("freelancer")->where("email", $saved_email)->get()[0];
 
         return view("freelancer-dashboard.application-page", ["freelancer" => $freelancer]);
-    })->middleware("userauth");
+    })->middleware("userauth")->name("application-form");
 
 
     Route::post("/dashboard/apply/done", function(Request $request){
@@ -220,19 +222,23 @@ Route::prefix("fx")->group(function(){
         $job_id = $request->input("job_id");
         $bidder = FreelancerModel::query()->where("email", $saved_email)->select("freelancer_id")->get()->first();
         $proposal_count = Proposal::where("freelancer_id", $bidder->freelancer_id)->get()->count();
-        if($proposal_count > 0 && !(JobModel::find($job_id)->is_open)){
+        if($proposal_count > 0 && !(JobModel::where("job_id", $job_id)->first()->is_open)){
+            error_log("proposal not sent");
             return redirect("/fx/dashboard");
                     // ->withErrors
         }
         else{
+            error_log("this");
             $proposal_text = $request->input("proposal_text");
             $bid = $request->input("bid");
             DB::table("proposal")->insert([
                 "proposal_text" => $proposal_text,
                 "bid" => $bid,
                 "job_id" => $job_id,
-                "freelancer_id" => $bidder["freelancer_id"]
+                "freelancer_id" => $bidder["freelancer_id"],
+                "created_time" => now()
             ]);
+            error_log("proposal succesfully sent");
             // Notification::send($bidder, new EventNotification());
             return redirect()->route("freelancer-dashboard");
         }
@@ -250,31 +256,40 @@ Route::prefix("fx")->group(function(){
     })->name("submission")->middleware("userauth");
 
     Route::post("/submit_project/post", function(Request $request){
-        error_log("job id:" . $request->input("job_id"));
-        $client = JobModel::where("job_id", $request->input("job_id"))->get()->first()->client;
-        $file = $request()->input("project-file");
-        $subject = $request->input("description");
+        // $job_id = $request->input("job_id");
+        $job_id = $request->input("project");
+        $client = JobModel::where("job_id", $job_id)->get()->first()->client;
+        $file = $request->file("project-file");
+        error_log("job_id: " . $job_id);
+        $originalName = $file->getClientOriginalName();
         if(request()->hasFile("project-file")){
-            Mail::to("pjcamp81@gmail.com")
-                ->send(new ProjectDone($file, $subject));
-                // ->attach(request()->input("project-file"));
-            // Mail::to("kalzokaleb@gmail.com"); //test
+            // Mail::to("pjcamp81@gmail.com")
+                // ->send(new ProjectDone($file->getRealPath(), $subject));
+            $recipientEmail = "pjcamp81@gmail.com"; 
+            // $recipientEmail = $client->email; 
+            Mail::send('mail-template.mail', [], function($message) use ($file, $originalName, $recipientEmail) {
+              $message->to($recipientEmail);
+              $message->attach($file->getRealPath(), [
+                'as' => $originalName,
+                'mime' => $file->getMimeType()
+              ]);
+
+            });
+
             $freelancer = FreelancerModel::where("email", session()->get("email"))->select("name")->first();
             $notification_data = [
-                "event" => "You're project assigned to" . $freelancer["name"] . "is done check your inbox"
+                "event" => "You're project assigned to " . $freelancer["name"] . " is done check your inbox"
             ];
             Notification::send($client, new EventNotification($notification_data));
-            error_log("excecuted");
-            // JobModel::find($request->input("job_id"))->hired->delete()
-            // JobModel::find($request->input("job_id"))->delete()
+            // delete change the project to finished
+            Hired::where("job_id", $job_id)->update(["finished" => true]);
             return redirect("/fx/dashboard");
         }
         else{
             Log::warning("the project was not sent to the client");
             return redirect()->back()->with("Project Not Sent, Please Try Again");
         }
-        //redirect with message bag to render on the freelancer dashboard
-        // JobModel::where()
+        // redirect with message bag to render on the freelancer dashboard
     })->name("submit");
 
 
@@ -285,7 +300,9 @@ Route::prefix("fx")->group(function(){
 Route::prefix("cx")->group(function(){
     Route::get("/dashboard", function(){
         $client = Client::where("email", session()->get("email"))->get()->first();
-        return view("client-dashboard.dashboard", ["client" => $client]);
+        $ongoing_jobs = Hired::where("client_id", $client->id)->where("finished", false)->with('job')->get();
+        error_log("ongoing_jobs: " . $ongoing_jobs);
+        return view("client-dashboard.dashboard", ["client" => $client, "ongoing_jobs" => $ongoing_jobs]);
     })->middleware("userauth");
 
     Route::get("/notifications", function(){
@@ -355,7 +372,8 @@ Route::prefix("cx")->group(function(){
         $client = Client::where("email", session()->get("email"))->get()->first();
         error_log($client->id);
         $posted_jobs = JobModel::where("id", $client->id)->get();
-        return view("client-dashboard.posted-list", ["client" => $client,"posted_jobs" => $posted_jobs]);
+        $proposals = Proposal::all();
+        return view("client-dashboard.posted-list", ["client" => $client,"posted_jobs" => $posted_jobs, "proposals" => $proposals]);
     })->middleware("userauth");
 
     Route::get("posted-jobs/{id}/proposals", ProposalsComponent::class)->middleware("userauth");

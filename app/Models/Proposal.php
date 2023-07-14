@@ -10,6 +10,7 @@ class Proposal extends Model
     use HasFactory;
 
     protected $table = "proposal";
+    public $timestamps = false;
 
     function job(){
         return $this->belongsTo(JobModel::class);

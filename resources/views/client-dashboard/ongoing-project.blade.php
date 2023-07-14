@@ -3,8 +3,12 @@
 @section("content")
 	<div class="mx-7 my-7 space-y-6 translate-x-72">
 	  <h1 class="font-bold text-3xl">Ongoing Project</h1>
-	  @foreach($hired as $hired)
-		  <div class="max-w-fit pr-4 rounded border border-green-500 duration-150 hover:border-green-700">
+	  @if(count($hired) < 1)
+	  	<p class="sm:translate-x-30 text-xl sm:translate-y-40">No Ongoing jobs yet</p>
+	  @else
+	  	<div class="flex flex-wrap -translate-x-5">
+	  	@foreach($hired as $hired)
+		  <div class="max-w-fit my-2 mx-2 pr-4 rounded border border-green-500 duration-150 hover:border-green-700">
 		    <div class="items-center space-y-2 space-x-2 py-3">
 		      <div class="mx-2 flex text-white">
 		        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -17,7 +21,7 @@
 		          <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
 		        </svg>
 		        <span class="font-semibold text-black">Cost:</span>
-		        <span class="mt-[2px] text-sm font-bold text-black">{{ $hired->job->price }}</span>
+		        <span class="mt-[2px] text-sm font-bold text-black">{{ $hired->job->price }}/hr</span>
 		      </div>
 		      <div class="flex items-center">
 		        <!-- <button class="bg-white hover:scale-105 duration-150 px-2 py-1 mx-2 rounded text-green-500 text-sm font-bold">Submit Project</button> -->
@@ -31,5 +35,7 @@
 		    </div>
 		  </div>
 		@endforeach
+		</div>
+		@endif 
 	</div>
 @endsection

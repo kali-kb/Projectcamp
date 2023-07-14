@@ -21,6 +21,9 @@
           <option>Frontend Engineer</option>
           <option>Mobile Developer</option>
           <option>Blockchain Developer</option>
+          <option>Web3 Developer</option>
+          <option>Cloud Architect</option>
+          <option>Software Architect</option>
         </select>
     </div>
     <div>
@@ -40,7 +43,7 @@
       @csrf
 	    <div>
         
-        <label for="profile-image" class="block mb-2 text-sm font-medium text-gray-900">Upload your Profile Picture</label>
+        <label for="profile-image" class="block mb-2 text-sm font-medium text-gray-900">Upload your Profile Picture</label> <span>An image with aspect ratio 1:1/square image required
         <input class="border rounded" type="file" name="profile-image">
 
 	      <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>

@@ -76,7 +76,7 @@
 	                                <span class="text-[#b1ff00]">Sign in as Freelancer</span>
 	                            </button>
 	                            <button type="submit" id="btn-2"
-	                                    class="w-full py-3 px-6 rounded-md bg-black
+	                                    class="w-full py-3 px-6 rounded-md 
 	                                        focus:bg-green-500 focus:text-white bg-[#b1ff00]">
 	                                <span class="text-black font-bold">Sign in as Client</span>
 	                            </button>

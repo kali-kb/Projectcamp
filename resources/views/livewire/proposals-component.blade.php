@@ -1,13 +1,9 @@
 <div class="mx-auto translate-x-36">
-    <!-- proposals -->
-{{--     <p>Proposals</p>
-    @foreach($proposals as $proposal)
-        <p>{{ $proposal->freelancer->name }}</p>
-    @endforeach --}}
 
-    @if(count($proposals) < 1)
+
+      @if(count($proposals) < 1)
         <h1 class="text-center">No Proposals yet</h1>
-    @else
+      @else
         <!-- proposal count -->
         <div class="flex items-center translate-x-56 space-x-2 mt-2">
           <div class="bg-gray-200 inline-block px-2 py-2 rounded-full">
@@ -42,15 +38,16 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#b1ff00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span class="font-semibold text-sm">{{ $proposal->freelancer->rate }}</span>
+                  <span class="font-semibold text-sm">Bid: ${{ $proposal->bid }}/hr</span>
                 </div>
               </div>
 
+              
               <!-- add a bid -->
 
               <div class="flex space-x-2 m-2">
                 <button wire:click="acceptProposal({{ $proposal->id }})" class="bg-[#b1ff00] hover:bg-green-600 duration-150 font-semibold px-4 py-2 rounded text-white">Accept</button>
-                <button wire:click="removeProposal({{$proposal->id}})" class="bg-red-500 hover:bg-red-600 duration-150 rounded sm:w-auto w-full px-4 py-2 text-white font-semibold">Decline</button>
+                <button wire:click="removeProposal({{ $proposal->id }})" class="bg-red-500 hover:bg-red-600 duration-150 rounded sm:w-auto w-full px-4 py-2 text-white font-semibold">Decline</button>
               </div>
             </div>
         @endforeach

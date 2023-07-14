@@ -9,13 +9,13 @@
                 </svg>
                 <div class="flex flex-col">
                   <span class="font-semibold">{{ $job->jobs->job_title }}</span>
-                  <span class="text-xs opacity-50">{{ $job->jobs->job_description }}</span>
+                  <span class="text-xs opacity-50">{{ Str::limit($job->jobs->job_description, 70) }}</span>
                   <span>{{ $job->jobs->client->name }}</span>
                   <div class="inline">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#b1ff00] inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <span class="font-bold text-sm">${{ $job->jobs->price }}</span>
+                    <span class="font-bold text-sm">${{ $job->jobs->price }}/hr</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#b1ff00] inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg> 
@@ -41,11 +41,24 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                     </svg>
                 </button>
-                <button id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-[#b1ff00] hover:bg-grey-900">Apply</button>
+                @if($job->jobs->hasFreelancerApplied() && $job->jobs->is_open)
+                  <button id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-gray-500 hover:bg-grey-900">Applied</button>
+                @elseif(!($job->jobs->hasFreelancerApplied()) && $job->jobs->is_open)
+                  <button onClick="navigateToProposalFormPage({{$job->jobs->job_id}})" id="apply-btn" class="px-4 py-2 text-md sm:w-auto w-full rounded md:-translate-x-7 font-semibold bg-black text-[#b1ff00] hover:bg-grey-900">Apply</button>
+
+                @endif
               </div>
             </div>
         @endforeach
     @else
         <h1>You havent saved any job</h1>
     @endif
+
+    <script>
+      function navigateToProposalFormPage(job_id) {
+        window.localStorage.job_id = job_id
+        window.location.href = "/fx/dashboard/apply"
+        console.log("The button was clicked");
+      }
+    </script>
 </div>

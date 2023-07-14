@@ -51,7 +51,7 @@
 			                                <span class="text-[#b1ff00] font-semibold">Create a Freelancer account</span>
 			                            </button>
 			                            <button type="submit" id="sub2" name="client" 
-			                                    class="w-full hover:scale-105 py-3 px-6 rounded-md bg-black
+			                                    class="w-full hover:scale-105 py-3 px-6 rounded-md
 			                                         bg-[#b1ff00]">
 			                                <span class="text-black font-bold">Create a Client account</span>
 			                            </button>
