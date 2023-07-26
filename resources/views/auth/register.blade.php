@@ -25,7 +25,7 @@
 		                        	{{-- @csrf --}}
 		                            <div class="space-y-2">
 		                                <label for="email" class="text-gray-700">Email</label>
-		                                <input  type="email" name="email" id="email" 
+		                                <input required type="email" name="email" id="email" 
 		    class="block w-full px-4 py-3 rounded-md border border-gray-300 text-gray-600 transition duration-300
 		        focus:ring-2 focus:ring-green-300 focus:outline-none
 		        invalid:ring-2 invalid:ring-red-400"
@@ -38,20 +38,20 @@
 		                                    <button class="p-2 -mr-2" type="reset">
 		                                    </button>
 		                                </div>
-		                                <input  type="password" name="pwd" id="pwd" 
+		                                <input required type="password" name="pwd" id="pwd" 
 		                                        class="block w-full px-4 py-3 rounded-md border border-gray-300 text-gray-600 transition duration-300
 		                                            focus:ring-2 focus:ring-green-300 focus:outline-none
 		                                            invalid:ring-2 invalid:ring-red-400"
 		                                >
 		                            </div>
 		                            <div class="mt-10 space-y-4">
-			                            <button type="submit" id="sub" name="freelancer" 
-			                                    class="w-full hover:scale-105 py-3 px-6 rounded-md bg-black
+			                            <button type="button" id="sub" name="freelancer" 
+			                                    class="complete-form-redirect w-full hover:scale-105 py-3 px-6 rounded-md bg-black
 			                                        focus:bg-gray-700 active:bg-gray-500">
 			                                <span class="text-[#b1ff00] font-semibold">Create a Freelancer account</span>
 			                            </button>
-			                            <button type="submit" id="sub2" name="client" 
-			                                    class="w-full hover:scale-105 py-3 px-6 rounded-md
+			                            <button type="button" id="sub2" name="client" 
+			                                    class="complete-form-redirect w-full hover:scale-105 py-3 px-6 rounded-md
 			                                         bg-[#b1ff00]">
 			                                <span class="text-black font-bold">Create a Client account</span>
 			                            </button>
@@ -77,39 +77,38 @@
 
     <script type="text/javascript">
 
-    	var sub = document.getElementById("sub")
-    	var sub_two = document.getElementById("sub2")
+    	 const email = document.getElementById("email");
+	    const password = document.getElementById("pwd");
+	    const freelancerButton = document.getElementById("sub");
+	    const clientButton = document.getElementById("sub2");
 
-    	var email = document.getElementById("email")
-    	var password = document.getElementById("pwd")
+	    // Function to handle form submission and validation
+	    function nextFormRedirection(e) {
+	        console.log("1");
 
-    	sub.addEventListener('click', s1)
-    	sub2.addEventListener('click', s2)
+	        // Check if email and password are empty
+	        if (email.value.trim() === '' || password.value.trim() === '') {
+	            alert("Please enter both email and password.");
+	        } else {
+	            // Determine which button was clicked and redirect accordingly
+	            if (e.target === freelancerButton) {
+	                console.log("freelancer");
+	                window.localStorage.email = email.value;
+	                window.localStorage.password = password.value;
+	                window.location.href = '/u/register/freelancer';
+	            } else if (e.target === clientButton) {
+	                console.log("client");
+	                window.localStorage.email = email.value;
+	                window.localStorage.password = password.value;
+	                window.location.href = '/u/register/client';
+	            }
+	        }
+	    }
 
-    	
-    	function s1(e){
-    		window.localStorage.email = email.value
-    		window.localStorage.password = password.value
-    		window.location.href = '/u/register/freelancer'
-    		// window.location.href = '/'
-    	}
+	    // Add event listeners to the buttons
+	    freelancerButton.addEventListener("click", nextFormRedirection);
+	    clientButton.addEventListener("click", nextFormRedirection);
 
-    	function s2(e){
-    		window.localStorage.email = email.value
-    		window.localStorage.password = password.value
-    		window.location.href = '/u/register/client'
-    		// window.location.href = '/'
-    	}
-
-    	/*
-    	if(e.target.name == "freelancer"){
-    		//freelancer register route
-    	}
-    	else{
-    		//freelancer register route
-
-    	}
-    	*/
     </script>    
 	</body>
 </html>

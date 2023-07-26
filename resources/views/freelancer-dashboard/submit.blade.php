@@ -9,21 +9,30 @@
         <span>Your finished project will arrive at the assignee client's email inbox</span>
       </div>
     </div>
+
     <form method="post" action="{{ route("submit") }}" enctype="multipart/form-data">
         @csrf
 
         {{-- <input type="hidden" id="job_id" name="job_id"> --}}
 
-
         <div class="sm:w-3/4 w-11/12 mx-auto my-3 space-y-6">
-            <div class="flex flex-col my-10">
-              <label>Select Project</label>
+          @if ($errors->any())
+            @foreach ($errors->all() as $error)
+              <p class="text-red-500">{{ $error }}</p>
+            @endforeach
+          @endif
+          <div class="flex flex-col my-10">
+            <label>Select Project</label>
+            @if(count($freelancer->ongoingProjects()) > 0)
               <select id="projectSelect" name="project" class="my-3 p-5 bg-transparent rounded border-2">
                 @foreach($freelancer->ongoingProjects() as $project)
                   <option value="{{$project->job->job_id}}">{{ $project->job->job_title }}</option>
                 @endforeach  
               </select>
-            </div>
+            @else
+              <p class="text-red-500 text-center">No Ongoing Projects found</p>
+            @endif
+          </div>
           <span>Project file</span>
           <div class="flex w-full h-36 items-center justify-center bg-grey-lighter">
             <label for="project-file" class="w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg tracking-wide uppercase border-2 border-[#b1ff00] border-dashed cursor-pointer hover:bg-blue">

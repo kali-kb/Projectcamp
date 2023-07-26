@@ -12,6 +12,11 @@
 	<form action="/fx/dashboard/apply/done" method="post">
 	  @csrf
 	  <div class="mx-auto w-11/12 space-y-6 sm:w-1/2">
+		@if ($errors->any())
+	      @foreach ($errors->all() as $error)
+	        <p class="text-red-500">{{ $error }}</p>
+	      @endforeach
+	    @endif
 	    <input type="hidden" name="job_id" id="job_id" value="" />
 	    <div>
 	      <label for="large-input" class="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300">Write your proposal</label>

@@ -14,6 +14,7 @@ use App\Models\Hired;
 use App\Models\Proposal;
 use App\Models\SavedJobs;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 use App\Notifications\EventNotification;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Http\Livewire\Bookmarked;
@@ -68,7 +69,7 @@ Route::get('/u/login', function(){
 
 Route::get('/u/register', function(){
     return view('auth.register');
-});
+})->name("register");
 
 Route::get('u/register/client', function(){
     return view('auth.client-register');
@@ -90,31 +91,36 @@ Route::get('u/logout', function(Request $request){
 
 //there should be a file and size has to be less than 5mb
 Route::post('u/register/freelancer/add', function(Request $request){
-    $hashed_password = Hash::make($request->input("password"));
+    $name = $request->input("name");
+    $email = $request->input("email");
+    $password = $request->input("password");
     $profile_image = $request->file("profile-image");
-    $has_file = $request->hasFile("profile-image"); 
+    $has_file = $request->hasFile("profile-image");
     $size = $has_file ? round(filesize($profile_image) / 1024 / 1024, 1) : 0;
-    if(!$has_file && $size > 5){
-        //add validation message
-        return redirect("u/register/freelancer");
-                    // ->withErrors()
+    $career = $request->input("career");
+    $location = $request->input("location");
+    $rate = $request->input("rate");
+
+    if (empty($name) || empty($email) || empty($password) || empty($rate) || !$has_file || $size > 5) {
+        $errorMessage = "Please fill out all the fields and ensure the profile image is under 5MB.";
+        return redirect()->back()->withErrors(["form_error" => $errorMessage])->withInput();
     }
-    else{    
-        $path = Cloudinary::upload($profile_image->getRealPath())->getSecurePath();
-        DB::table('freelancer')->insert([
-            "name" => $request->input("name"),
-            "email" => $request->input("email"),
-            "profile_image_url" => $path,
-            "career" => $request->input("career"),
-            "location" => $request->input("location"),
-            "rate" => $request->input("rate"),
-            "password" => $hashed_password
-        ]);
-        Session::put("email", $request->input("email"));
-        Session::put("account_type", $request->input("freelancer"));
-        // session(["email" => $request->input("email")]);
-        return redirect('/fx/dashboard');
-    }
+
+    $hashed_password = Hash::make($password);
+    $path = Cloudinary::upload($profile_image->getRealPath())->getSecurePath();
+    DB::table('freelancer')->insert([
+        "name" => $name,
+        "email" => $email,
+        "profile_image_url" => $path,
+        "career" => $career,
+        "location" => $location,
+        "rate" => $rate,
+        "password" => $hashed_password
+    ]);
+
+    Session::put("email", $email);
+    Session::put("account_type", "freelancer");
+    return redirect('/fx/dashboard');
 });
 
 
@@ -144,6 +150,21 @@ Route::post("/u/login/check", function(Request $request){
 
 
 Route::post("u/register/client/add", function(Request $request){
+
+    $rules = [
+        'name' => 'required|string|max:255',
+        'password' => 'required|string|min:6', // At least 6 characters for the password
+        'email' => 'required|email|unique:client,email|max:255',
+        'location' => 'required|string|max:255',
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+
     DB::table('client')->insert([
         "name" => $request->input("name"),
         "password" => Hash::make($request->input("password")),
@@ -228,9 +249,22 @@ Route::prefix("fx")->group(function(){
                     // ->withErrors
         }
         else{
-            error_log("this");
+
             $proposal_text = $request->input("proposal_text");
             $bid = $request->input("bid");
+            
+            $rules = [
+                'proposal_text' => 'required|string|max:500',
+                'bid' => 'required|numeric|min:5',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+                // Check if the validation fails
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
             DB::table("proposal")->insert([
                 "proposal_text" => $proposal_text,
                 "bid" => $bid,
@@ -238,8 +272,7 @@ Route::prefix("fx")->group(function(){
                 "freelancer_id" => $bidder["freelancer_id"],
                 "created_time" => now()
             ]);
-            error_log("proposal succesfully sent");
-            // Notification::send($bidder, new EventNotification());
+
             return redirect()->route("freelancer-dashboard");
         }
     });
@@ -257,14 +290,24 @@ Route::prefix("fx")->group(function(){
 
     Route::post("/submit_project/post", function(Request $request){
         // $job_id = $request->input("job_id");
+        $rules = [
+            'project' => 'required',
+            'project-file' => 'required|file|max:5120',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        
         $job_id = $request->input("project");
-        $client = JobModel::where("job_id", $job_id)->get()->first()->client;
         $file = $request->file("project-file");
-        error_log("job_id: " . $job_id);
+        $client = JobModel::where("job_id", $job_id)->get()->first()->client;
         $originalName = $file->getClientOriginalName();
+
+
         if(request()->hasFile("project-file")){
-            // Mail::to("pjcamp81@gmail.com")
-                // ->send(new ProjectDone($file->getRealPath(), $subject));
             $recipientEmail = $client->email; 
             Mail::send('mail-template.mail', [], function($message) use ($file, $originalName, $recipientEmail) {
               $message->to($recipientEmail);
@@ -329,40 +372,54 @@ Route::prefix("cx")->group(function(){
     Route::post("/login/check", function(Request $request){
         $password = $request->input("pwd");
         $email = $request->input("email");
-        $client = Client::where("email", $email)->get();
-        // $user = $request->input("f-type") == "freelancer" ? FreelancerModel::where("email", $email)->get() : Client::where("email", $email)->get();
-        // if(empty($client) == 1)
-        if(($client == []) != 1){    
-            $hashed_password = $client[0]["password"];
-            if(Hash::check($password, $hashed_password)){
+        $client = Client::where("email", $email)->first();
+
+        if ($client) {
+            $hashed_password = $client->password;
+            if (Hash::check($password, $hashed_password)) {
                 session(["email" => $email, "account_type" => "client"]);
                 return redirect('cx/dashboard');
+            } else {
+                return redirect()->route("login")->withErrors(["password" => "Incorrect password"]);
             }
-            else{
-                return redirect()->route("login");
-            }
-        }
-        else{
-            return redirect()
-                    // ->withErrors() //provide errors
-                    ->route("login");
+        } else {
+            return redirect()->route("login")->withErrors(["email" => "Email not found"]);
         }
     });
 
 
     Route::get("/post-job", function(){
         return view("client-dashboard.job-post");
-    })->middleware("userauth");
+    })->name("post-job")->middleware("userauth");
 
     Route::post("/post-job/new", function(Request $request){
-        $client = Client::where("email", session()->get("email"))->get();
-        DB::table("job")->insert([
-            "job_title" => $request->input("title"),
-            "price" => $request->input("price"),
-            "job_description" => $request->input("description"),
-            "id" => $client[0]["id"],
-        ]);
-        return redirect("/cx/dashboard");
+
+        $rules = [
+            'title' => 'required|string|max:255',
+            'price' => 'required|numeric|min:5',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $client = Client::where("email", session()->get("email"))->first();
+
+        if ($client) {
+            DB::table("job")->insert([
+                "job_title" => $request->input("title"),
+                "price" => $request->input("price"),
+                "job_description" => $request->input("description"),
+                "id" => $client->id, // Assuming the column name is "client_id"
+            ]);
+            return redirect("/cx/dashboard");
+        } else {
+            // Handle the case when the client is not found
+            return redirect()->route("login")->withErrors(["email" => "Client not found"]);
+        }
+
     })->middleware("userauth");
 
     //try except and logging
